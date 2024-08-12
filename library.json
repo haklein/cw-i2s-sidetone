@@ -1,0 +1,26 @@
+{
+  "name": "cw-i2s-sidetone",
+  "version": "1.0.1",
+  "description": "Generates an I2S sidetone for CW via arduino-audio-tools",
+  "keywords": "morse, cw, hamradio, I2S",
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/haklein/cw-i2s-sidetone.git"
+  },
+  "authors":
+  [
+    {
+      "name": "Harald Klein",
+      "email": "hari@vt100.at",
+      "maintainer": true
+    }
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/haklein/cw-i2s-sidetone.git",
+  "dependencies": {
+	"external-repo": "https://github.com/pschatzmann/arduino-audio-tools.git"
+  },
+  "frameworks": "*",
+  "platforms": "*"
+}
