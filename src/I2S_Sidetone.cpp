@@ -34,9 +34,10 @@ void I2S_Sidetone::begin() {
     sine = new SineFromTable<int16_t>();
     // sine = new SineWaveGenerator<int16_t>();
 	in = new GeneratedSoundStream<int16_t>(*sine); 
-    
+
+    volume = new VolumeStream(*i2s);
     effects = new AudioEffectStream(*in);
-    copier = new StreamCopy(*i2s, *effects); 
+    copier = new StreamCopy(*volume, *effects);
     adsr = new ADSRGain(0.0100,20.0, 1.0 , 0.008);
 
     float freq = 600.0;
@@ -46,6 +47,10 @@ void I2S_Sidetone::begin() {
 
     effects->addEffect(*adsr);
     effects->begin(config);
+
+    volume->begin(config);
+    volume->setVolume(0.3);
+
     AudioLogger::instance().begin(Serial,AudioLogger::Error);
     xTaskCreatePinnedToCore(audio_task, "audio", 4096, (void*)copier, configMAX_PRIORITIES - 1, nullptr, 1);
 }
@@ -56,6 +61,9 @@ void I2S_Sidetone::tick() {
 void I2S_Sidetone::setFrequency(float f) {
     sine->setFrequency(f);
     frequency = f;
+}
+void I2S_Sidetone::setVolume(float v) {
+    sine->setVolume(v);
 }
 float I2S_Sidetone::getFrequency() {
     return frequency;

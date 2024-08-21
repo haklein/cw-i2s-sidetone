@@ -6,6 +6,7 @@ class I2S_Sidetone {
 		I2S_Sidetone();
 		void begin();
 		void setFrequency(float f);
+		void setVolume(float v);
 		float getFrequency();
 		void on();
 		void off();
@@ -17,6 +18,7 @@ class I2S_Sidetone {
 		// SineWaveGenerator<int16_t> *sine;
 		GeneratedSoundStream<int16_t> *in; 
 		AudioEffectStream *effects;
+		VolumeStream *volume;
 		StreamCopy *copier;
 		ADSRGain *adsr;
 		float frequency;
