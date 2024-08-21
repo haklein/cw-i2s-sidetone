@@ -63,7 +63,7 @@ void I2S_Sidetone::setFrequency(float f) {
     frequency = f;
 }
 void I2S_Sidetone::setVolume(float v) {
-    sine->setVolume(v);
+    volume->setVolume(v);
 }
 float I2S_Sidetone::getFrequency() {
     return frequency;
