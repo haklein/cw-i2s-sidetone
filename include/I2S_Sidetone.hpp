@@ -8,6 +8,7 @@ class I2S_Sidetone {
 		void setFrequency(float f);
 		void setVolume(float v);
 		float getFrequency();
+		void setADSR(float attack, float decay, float sustainLevel, float release);
 		void on();
 		void off();
 		bool isOn();

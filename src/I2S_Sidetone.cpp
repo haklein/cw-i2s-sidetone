@@ -54,6 +54,12 @@ void I2S_Sidetone::begin() {
     AudioLogger::instance().begin(Serial,AudioLogger::Error);
     xTaskCreatePinnedToCore(audio_task, "audio", 4096, (void*)copier, configMAX_PRIORITIES - 1, nullptr, 1);
 }
+void I2S_Sidetone::setADSR(float attack=0.001, float decay=0.001, float sustainLevel=0.5, float release=0.005) {
+    adsr->setAttackRate(attack);
+    adsr->setDecayRate(decay);
+    adsr->setReleaseRate(release);
+    adsr->setSustainLevel(sustainLevel);
+}
 
 void I2S_Sidetone::tick() {
     copier->copy();
