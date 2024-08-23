@@ -38,7 +38,7 @@ void I2S_Sidetone::begin() {
     volume = new VolumeStream(*i2s);
     effects = new AudioEffectStream(*in);
     copier = new StreamCopy(*volume, *effects, 16);
-    adsr = new ADSRGain(0.0100,20.0, 1.0 , 0.008);
+    adsr = new ADSRGain(0.05,1.0, 1.0 , 0.008);
 
     float freq = 600.0;
     sine->begin(config, 0);
