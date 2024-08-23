@@ -25,7 +25,7 @@ void I2S_Sidetone::begin() {
     config.pin_bck = CONFIG_I2S_BCK_PIN; // define your i2s pins
     config.pin_ws = CONFIG_I2S_LRCK_PIN;
     config.pin_data = CONFIG_I2S_DATA_PIN;
-    config.buffer_size=1024;
+    config.buffer_size=16;
 
     // Serial.println("starting I2S...");
     i2s->begin(config);
@@ -37,7 +37,7 @@ void I2S_Sidetone::begin() {
 
     volume = new VolumeStream(*i2s);
     effects = new AudioEffectStream(*in);
-    copier = new StreamCopy(*volume, *effects);
+    copier = new StreamCopy(*volume, *effects, 16);
     adsr = new ADSRGain(0.0100,20.0, 1.0 , 0.008);
 
     float freq = 600.0;
