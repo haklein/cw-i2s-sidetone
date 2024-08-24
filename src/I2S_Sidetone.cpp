@@ -15,13 +15,13 @@ static void audio_task(void *userData)
 I2S_Sidetone::I2S_Sidetone() {
     frequency=0.0;
 }
-void I2S_Sidetone::begin(int buffer_size) {
+void I2S_Sidetone::begin(int samplerate, int bps, int channels, int buffer_size) {
     AudioLogger::instance().begin(Serial,AudioLogger::Info);
     i2s = new I2SStream;
     I2SConfig config = i2s->defaultConfig(TX_MODE);
-    config.sample_rate = 44100; 
-    config.channels = 2;
-    config.bits_per_sample = 16;
+    config.sample_rate = samplerate;
+    config.channels = channels;
+    config.bits_per_sample = bps;
     config.pin_bck = CONFIG_I2S_BCK_PIN; // define your i2s pins
     config.pin_ws = CONFIG_I2S_LRCK_PIN;
     config.pin_data = CONFIG_I2S_DATA_PIN;
@@ -29,11 +29,10 @@ void I2S_Sidetone::begin(int buffer_size) {
 
     // Serial.println("starting I2S...");
     i2s->begin(config);
-
         
     sine = new SineFromTable<int16_t>();
     // sine = new SineWaveGenerator<int16_t>();
-	in = new GeneratedSoundStream<int16_t>(*sine); 
+    in = new GeneratedSoundStream<int16_t>(*sine);
 
     volume = new VolumeStream(*i2s);
     effects = new AudioEffectStream(*in);
@@ -41,8 +40,7 @@ void I2S_Sidetone::begin(int buffer_size) {
     adsr = new ADSRGain(0.005,1.0, 1.0 , 0.005);
 
     float freq = 600.0;
-    sine->begin(config, 0);
-    sine->setFrequency(freq);
+    sine->begin(config, freq);
     in->begin(config);
 
     effects->addEffect(*adsr);

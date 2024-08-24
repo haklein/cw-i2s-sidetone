@@ -4,7 +4,7 @@
 class I2S_Sidetone {
 	public:
 		I2S_Sidetone();
-		void begin(int buffer_size=32);
+		void begin(int samplerate = 44100, int bps=16, int channels = 2, int buffer_size=32);
 		void setFrequency(float f);
 		void setVolume(float v);
 		float getFrequency();
