@@ -15,7 +15,7 @@ static void audio_task(void *userData)
 I2S_Sidetone::I2S_Sidetone() {
     frequency=0.0;
 }
-void I2S_Sidetone::begin() {  
+void I2S_Sidetone::begin(int buffer_size) {
     AudioLogger::instance().begin(Serial,AudioLogger::Info);
     i2s = new I2SStream;
     I2SConfig config = i2s->defaultConfig(TX_MODE);
@@ -25,7 +25,7 @@ void I2S_Sidetone::begin() {
     config.pin_bck = CONFIG_I2S_BCK_PIN; // define your i2s pins
     config.pin_ws = CONFIG_I2S_LRCK_PIN;
     config.pin_data = CONFIG_I2S_DATA_PIN;
-    config.buffer_size=16;
+    config.buffer_size=buffer_size;
 
     // Serial.println("starting I2S...");
     i2s->begin(config);
@@ -37,8 +37,8 @@ void I2S_Sidetone::begin() {
 
     volume = new VolumeStream(*i2s);
     effects = new AudioEffectStream(*in);
-    copier = new StreamCopy(*volume, *effects, 16);
-    adsr = new ADSRGain(0.05,1.0, 1.0 , 0.008);
+    copier = new StreamCopy(*volume, *effects, buffer_size);
+    adsr = new ADSRGain(0.005,1.0, 1.0 , 0.005);
 
     float freq = 600.0;
     sine->begin(config, 0);

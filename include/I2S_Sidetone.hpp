@@ -4,7 +4,7 @@
 class I2S_Sidetone {
 	public:
 		I2S_Sidetone();
-		void begin();
+		void begin(int buffer_size=32);
 		void setFrequency(float f);
 		void setVolume(float v);
 		float getFrequency();
