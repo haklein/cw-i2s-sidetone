@@ -35,6 +35,7 @@ void I2S_Sidetone::begin(int samplerate, int bps, int channels, int buffer_size)
     in = new GeneratedSoundStream<int16_t>(*sine);
 
     volume = new VolumeStream(*i2s);
+    lvc = new LogarithmicVolumeControl(0.1);
     effects = new AudioEffectStream(*in);
     copier = new StreamCopy(*volume, *effects, buffer_size);
     adsr = new ADSRGain(0.005,1.0, 1.0 , 0.005);
@@ -47,6 +48,7 @@ void I2S_Sidetone::begin(int samplerate, int bps, int channels, int buffer_size)
     effects->begin(config);
 
     volume->begin(config);
+    volume->setVolumeControl(*lvc);
     volume->setVolume(0.3);
 
     AudioLogger::instance().begin(Serial,AudioLogger::Error);

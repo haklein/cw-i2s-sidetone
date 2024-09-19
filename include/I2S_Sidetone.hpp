@@ -20,6 +20,7 @@ class I2S_Sidetone {
 		GeneratedSoundStream<int16_t> *in; 
 		AudioEffectStream *effects;
 		VolumeStream *volume;
+		LogarithmicVolumeControl *lvc;
 		StreamCopy *copier;
 		ADSRGain *adsr;
 		float frequency;
