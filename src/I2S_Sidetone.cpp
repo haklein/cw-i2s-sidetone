@@ -18,13 +18,20 @@ I2S_Sidetone::I2S_Sidetone() {
 void I2S_Sidetone::begin(int samplerate, int bps, int channels, int buffer_size) {
     AudioLogger::instance().begin(Serial,AudioLogger::Info);
     i2s = new I2SStream;
+#ifdef CONFIG_I2S_DATA_IN_PIN
+    I2SConfig config = i2s->defaultConfig(RXTX_MODE);
+#else
     I2SConfig config = i2s->defaultConfig(TX_MODE);
+#endif
     config.sample_rate = samplerate;
     config.channels = channels;
     config.bits_per_sample = bps;
     config.pin_bck = CONFIG_I2S_BCK_PIN; // define your i2s pins
     config.pin_ws = CONFIG_I2S_LRCK_PIN;
     config.pin_data = CONFIG_I2S_DATA_PIN;
+#ifdef CONFIG_I2S_DATA_IN_PIN
+    config.pin_data_rx = CONFIG_I2S_DATA_IN_PIN;
+#endif
     config.buffer_size=buffer_size;
 
     // Serial.println("starting I2S...");
@@ -60,7 +67,12 @@ void I2S_Sidetone::setADSR(float attack=0.001, float decay=0.001, float sustainL
     adsr->setReleaseRate(release);
     adsr->setSustainLevel(sustainLevel);
 }
-
+size_t I2S_Sidetone::readBytes (uint8_t *data, size_t len) {
+    return i2s->readBytes(data,len);
+}
+int I2S_Sidetone::available() {
+    return i2s->available();
+}
 void I2S_Sidetone::tick() {
     copier->copy();
 }
