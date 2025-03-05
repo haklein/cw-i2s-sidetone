@@ -109,7 +109,7 @@ void I2S_Sidetone::off() {
     adsr->keyOff();
 }
 
-void I2S_Sidetone::playSPIFFSFile(const char *filename) {
+bool I2S_Sidetone::playSPIFFSFile(const char *filename) {
     if(SPIFFS.exists(filename)) {
         mp3file = SPIFFS.open(filename, "r");
         if(!mp3file){
@@ -122,7 +122,9 @@ void I2S_Sidetone::playSPIFFSFile(const char *filename) {
         while (mp3file.available()) delay(100); // block until copier did copy the whole stream
         mixer->set(0,*effects);
         mp3file.close();
-   }
+        return true;
+    } else
+        return false;
 }
 
 bool I2S_Sidetone::isOn() {

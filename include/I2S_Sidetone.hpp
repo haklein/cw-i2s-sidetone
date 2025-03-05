@@ -14,7 +14,7 @@ class I2S_Sidetone {
     void setADSR(float attack, float decay, float sustainLevel, float release);
     void on();
     void off();
-    void playSPIFFSFile(const char *filename);
+    bool playSPIFFSFile(const char *filename);
     bool isOn();
     void tick();
     size_t readBytes (uint8_t *data, size_t len);
