@@ -1,5 +1,8 @@
 #pragma once
+
 #include "AudioTools.h"
+#include "AudioTools/AudioLibs/AudioSourceSPIFFS.h"
+#include "AudioTools/AudioCodecs/CodecMP3Helix.h"
 
 class I2S_Sidetone {
 	public:
@@ -11,6 +14,7 @@ class I2S_Sidetone {
     void setADSR(float attack, float decay, float sustainLevel, float release);
     void on();
     void off();
+    void playSPIFFSFile(const char *filename);
     bool isOn();
     void tick();
     size_t readBytes (uint8_t *data, size_t len);
@@ -25,5 +29,10 @@ class I2S_Sidetone {
     LogarithmicVolumeControl *lvc;
     StreamCopy *copier;
     ADSRGain *adsr;
+
+    File mp3file;
+    EncodedAudioStream *decoder;
+    InputMixer<int16_t> *mixer;
+
     float frequency;
 };

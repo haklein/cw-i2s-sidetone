@@ -42,10 +42,26 @@ void I2S_Sidetone::begin(int samplerate, int bps, int channels, int buffer_size)
     in = new GeneratedSoundStream<int16_t>(*sine);
 
     volume = new VolumeStream(*i2s);
-    lvc = new LogarithmicVolumeControl(0.1);
+    //lvc = new LogarithmicVolumeControl(0.1); // not using LVC anymore due to direct amp control with codec
     effects = new AudioEffectStream(*in);
-    copier = new StreamCopy(*volume, *effects, buffer_size);
-    adsr = new ADSRGain(0.005,1.0, 1.0 , 0.005);
+
+    decoder = new EncodedAudioStream(&mp3file, new MP3DecoderHelix());
+    decoder->setNotifyActive (false);
+    decoder->transformationReader().setResultQueueFactor(14); // workaround see discussion 1828
+    decoder->begin(config);
+
+    mixer = new InputMixer<int16_t>();
+    mixer->setLimitToAvailableData(true);
+    mixer->setNotifyActive (false);
+    mixer->add(*effects);
+    // mixer->add(*decoder);
+    mixer->begin(config);
+
+    copier = new StreamCopy(*volume, *mixer);
+    //copier = new StreamCopy(*volume, *mixer, buffer_size); // using "our" buffer size crashes -  https://github.com/pschatzmann/arduino-audio-tools/discussions/1828
+    //copier = new StreamCopy(*volume, *mixer, 256); // also crashes
+
+    adsr = new ADSRGain(0.003,1.0, 1.0 , 0.003);
 
     float freq = 600.0;
     sine->begin(config, freq);
@@ -55,8 +71,8 @@ void I2S_Sidetone::begin(int samplerate, int bps, int channels, int buffer_size)
     effects->begin(config);
 
     volume->begin(config);
-    volume->setVolumeControl(*lvc);
-    volume->setVolume(0.3);
+    //volume->setVolumeControl(*lvc);
+    volume->setVolume(0.8);
 
     AudioLogger::instance().begin(Serial,AudioLogger::Error);
     xTaskCreatePinnedToCore(audio_task, "audio", 4096, (void*)copier, configMAX_PRIORITIES - 1, nullptr, 1);
@@ -92,6 +108,23 @@ void I2S_Sidetone::on() {
 void I2S_Sidetone::off() {
     adsr->keyOff();
 }
+
+void I2S_Sidetone::playSPIFFSFile(const char *filename) {
+    if(SPIFFS.exists(filename)) {
+        mp3file = SPIFFS.open(filename, "r");
+        if(!mp3file){
+            Serial.println("Failed to open file for reading");
+        }
+        //Serial.print("File size: ");
+        //Serial.println(mp3file.size());
+        decoder->setStream(&mp3file);
+        mixer->set(0,*decoder);
+        while (mp3file.available()) delay(100); // block until copier did copy the whole stream
+        mixer->set(0,*effects);
+        mp3file.close();
+   }
+}
+
 bool I2S_Sidetone::isOn() {
     return false;
 }

@@ -19,7 +19,7 @@
   "license": "MIT",
   "homepage": "https://github.com/haklein/cw-i2s-sidetone.git",
   "dependencies": {
-	"external-repo": "https://github.com/pschatzmann/arduino-audio-tools.git#v1.0.1"
+	"external-repo": "https://github.com/pschatzmann/arduino-audio-tools.git#v1.0.2"
   },
   "frameworks": "*",
   "platforms": "*"
