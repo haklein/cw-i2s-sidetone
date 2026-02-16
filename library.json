@@ -1,6 +1,6 @@
 {
   "name": "cw-i2s-sidetone",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Generates an I2S sidetone for CW via arduino-audio-tools",
   "keywords": "morse, cw, hamradio, I2S",
   "repository":
@@ -19,8 +19,8 @@
   "license": "MIT",
   "homepage": "https://github.com/haklein/cw-i2s-sidetone.git",
   "dependencies": {
-	"pschatzmann/arduino-audio-tools": "https://github.com/pschatzmann/arduino-audio-tools.git#v1.0.2",
-	"pschatzmann/arduino-libhelix": "https://github.com/pschatzmann/arduino-libhelix.git#v0.8.7",
+	"pschatzmann/arduino-audio-tools": "https://github.com/pschatzmann/arduino-audio-tools.git#v1.2.2",
+	"pschatzmann/arduino-libhelix": "https://github.com/pschatzmann/arduino-libhelix.git#v0.9.2",
 	"pschatzmann/arduino-audiokit": "https://github.com/pschatzmann/arduino-audiokit.git#v0.7.0"
   },
   "frameworks": "*",

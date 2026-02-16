@@ -1,7 +1,7 @@
 #pragma once
 
 #include "AudioTools.h"
-#include "AudioTools/AudioLibs/AudioSourceSPIFFS.h"
+#include "AudioTools/Disk/AudioSourceSPIFFS.h"
 #include "AudioTools/AudioCodecs/CodecMP3Helix.h"
 
 class I2S_Sidetone {
