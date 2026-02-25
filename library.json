@@ -1,6 +1,6 @@
 {
   "name": "cw-i2s-sidetone",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Generates an I2S sidetone for CW via arduino-audio-tools",
   "keywords": "morse, cw, hamradio, I2S",
   "repository":
