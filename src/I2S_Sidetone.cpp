@@ -37,8 +37,7 @@ void I2S_Sidetone::begin(int samplerate, int bps, int channels, int buffer_size)
     // Serial.println("starting I2S...");
     i2s->begin(config);
         
-    sine = new SineFromTable<int16_t>();
-    // sine = new SineWaveGenerator<int16_t>();
+    sine = new ComplexRotorSine();
     in = new GeneratedSoundStream<int16_t>(*sine);
 
     volume = new VolumeStream(*i2s);
@@ -61,7 +60,7 @@ void I2S_Sidetone::begin(int samplerate, int bps, int channels, int buffer_size)
     //copier = new StreamCopy(*volume, *mixer, buffer_size); // using "our" buffer size crashes -  https://github.com/pschatzmann/arduino-audio-tools/discussions/1828
     //copier = new StreamCopy(*volume, *mixer, 256); // also crashes
 
-    adsr = new ADSRGain(0.003,1.0, 1.0 , 0.003);
+    adsr = new BlackmanHarrisEnvelope(0.005f, 0.005f, samplerate);
 
     float freq = 600.0;
     sine->begin(config, freq);

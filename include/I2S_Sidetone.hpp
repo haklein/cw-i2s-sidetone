@@ -3,6 +3,8 @@
 #include "AudioTools.h"
 #include "AudioTools/Disk/AudioSourceSPIFFS.h"
 #include "AudioTools/AudioCodecs/CodecMP3Helix.h"
+#include "BlackmanHarrisEnvelope.hpp"
+#include "ComplexRotorSine.hpp"
 
 class I2S_Sidetone {
 	public:
@@ -21,14 +23,13 @@ class I2S_Sidetone {
     int available ();
 	private:
     I2SStream *i2s;
-    SineFromTable<int16_t> *sine;
-    // SineWaveGenerator<int16_t> *sine;
+    ComplexRotorSine *sine;
     GeneratedSoundStream<int16_t> *in;
     AudioEffectStream *effects;
     VolumeStream *volume;
     LogarithmicVolumeControl *lvc;
     StreamCopy *copier;
-    ADSRGain *adsr;
+    BlackmanHarrisEnvelope *adsr;
 
     File mp3file;
     EncodedAudioStream *decoder;
