@@ -16,7 +16,13 @@ I2S_Sidetone::I2S_Sidetone() {
     frequency=0.0;
 }
 void I2S_Sidetone::begin(int samplerate, int bps, int channels, int buffer_size) {
-    AudioLogger::instance().begin(Serial,AudioLogger::Info);
+    // Don't bump the audio_tools logger up to Info — it dumps a couple
+    // dozen lines of init info into the boot log, which is noise for
+    // production builds. The library's compile-time default LOG_LEVEL is
+    // already Warning, and we restore Error explicitly at the end of
+    // begin(). If a downstream user wants the verbose output for
+    // debugging, they can call AudioLogger::instance().begin(Serial,
+    // AudioLogger::Info) themselves before sidetone.begin().
     i2s = new I2SStream;
 #ifdef CONFIG_I2S_DATA_IN_PIN
     I2SConfig config = i2s->defaultConfig(RXTX_MODE);
