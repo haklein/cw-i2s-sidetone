@@ -124,7 +124,24 @@ bool I2S_Sidetone::playSPIFFSFile(const char *filename) {
         //Serial.println(mp3file.size());
         decoder->setStream(&mp3file);
         mixer->set(0,*decoder);
-        while (mp3file.available()) delay(100); // block until copier did copy the whole stream
+
+        // Wait for the PIPELINE to empty, not just the file. mp3file.available() goes
+        // false when the last byte has been read out of SPIFFS, but the decoder's result
+        // queue (setResultQueueFactor(14) above) still holds decoded audio that has not
+        // reached the I2S yet. Switching the mixer input back to the oscillator at that
+        // point discards it, so the tail of the file is never played.
+        //
+        // Measured on an ESP32-S3 with a small speaker: recording the same file with and
+        // without this wait, the level collapses about 80 ms before the file's nominal
+        // end without it, and follows the file's own envelope to the end with it.
+        while (mp3file.available()) delay(5);          // was 100 -- start the wait promptly
+        uint32_t drain = millis();
+        while (decoder->available() > 0 && millis() - drain < 300) delay(5);
+        // Do not linger once it is dry: with setLimitToAvailableData(true) an empty
+        // decoder still selected as the mixer input starves the copier. Small margin for
+        // the final chunk to be copied, then hand the mixer back.
+        delay(20);
+
         mixer->set(0,*effects);
         mp3file.close();
         return true;
